@@ -1,0 +1,41 @@
+{
+  "name": "bns-proxy",
+  "version": "0.0.1",
+  "description": "BNS Proxy Server",
+  "author": "IOV SAS <admin@iov.one>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
+    "lint": "tslint -t verbose --project .",
+    "prebuild": "yarn format && yarn lint",
+    "build": "rm -rf build && tsc",
+    "test": "yarn build && NODE_ENV=local mocha \"./build/**/*.spec.js\" --exit",
+    "dev-start": "yarn build && NODE_ENV=local node build/server.js",
+    "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js"
+  },
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^4.2.0",
+    "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
+    "@koa/cors": "^3.0.0",
+    "@types/chai": "^4.1.7",
+    "@types/koa": "^2.0.48",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-helmet": "^3.1.2",
+    "@types/koa-router": "^7.0.42",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.10",
+    "@types/supertest": "^2.0.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-immutable": "^6.0.0",
+    "typescript": "^3.5.2"
+  }
+}
