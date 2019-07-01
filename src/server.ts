@@ -4,6 +4,7 @@ import * as helmet from "koa-helmet";
 
 import { config } from "./config";
 import generalController from "./controllers/general";
+import usernameController from "./controllers/username";
 
 export const app = new Koa();
 
@@ -14,8 +15,12 @@ app.use(helmet());
 app.use(bodyParser());
 
 // Route middleware.
+// General
 app.use(generalController.routes());
 app.use(generalController.allowedMethods());
+// Username
+app.use(usernameController.routes());
+app.use(usernameController.allowedMethods());
 
 app.listen(config.port);
 

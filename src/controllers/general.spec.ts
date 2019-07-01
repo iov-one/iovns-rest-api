@@ -5,7 +5,7 @@ const request = supertest.agent(app.listen());
 
 describe("General", () => {
   describe("GET /", () => {
-    it("should work return welcome message", () => {
+    it("should return welcome message", () => {
       return request.get("/").expect(200, "Welcome to IOV BNS Server!");
     });
   });

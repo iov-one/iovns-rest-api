@@ -8,7 +8,8 @@ if (!ENVIRONMENT || ENV_WHITELIST.indexOf(ENVIRONMENT) === -1) {
 interface IConfig {
   port: number;
   jwtSecret: string;
-  bnsdNode: string;
+  bnsdTendermintHttpUrl: string;
+  bnsdTendermintUrl: string;
 }
 
 export const config: IConfig = require(`./env/${ENVIRONMENT}`);

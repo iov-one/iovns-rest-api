@@ -9,11 +9,13 @@
     "lint": "tslint -t verbose --project .",
     "prebuild": "yarn format && yarn lint",
     "build": "rm -rf build && tsc",
-    "test": "yarn build && NODE_ENV=local mocha \"./build/**/*.spec.js\" --exit",
-    "dev-start": "yarn build && NODE_ENV=local node build/server.js",
+    "local-test": "yarn build && NODE_ENV=local mocha \"./build/**/*.spec.js\" --exit",
+    "local-start": "yarn build && NODE_ENV=local node build/server.js",
+    "testnet-test": "yarn build && NODE_ENV=testnet mocha \"./build/**/*.spec.js\" --exit",
     "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js"
   },
   "dependencies": {
+    "@iov/bns": "^0.14.5",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",
