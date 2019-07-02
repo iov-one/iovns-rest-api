@@ -10,6 +10,7 @@ interface IConfig {
   jwtSecret: string;
   bnsdTendermintHttpUrl: string;
   bnsdTendermintUrl: string;
+  iovFaucet: string;
 }
 
 export const config: IConfig = require(`./env/${ENVIRONMENT}`);

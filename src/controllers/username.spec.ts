@@ -1,5 +1,16 @@
 import * as supertest from "supertest";
+import { ChainId, isBlockInfoPending, TokenTicker } from "@iov/bcp";
+import { bnsConnector, bnsCodec, RegisterUsernameTx } from "@iov/bns";
+import { Random } from "@iov/crypto";
+import { MultiChainSigner } from "@iov/core";
+import { Ed25519HdWallet, HdPaths, UserProfile } from "@iov/keycontrol";
+import { IovFaucet } from "@iov/faucets";
+import { Encoding } from "@iov/encoding";
+
+import { config } from "../config";
 import { app } from "../server";
+
+import { expect } from 'chai';
 
 const request = supertest.agent(app.listen());
 
@@ -11,28 +22,87 @@ describe("Username", () => {
           "The username you are trying to retrieve (user-does-not-exists) doesn't exist in BNS"
       });
     });
-    it("should return username data", () => {
-      return request
-        .get("/username/lucas")
-        .expect(200, {
-          id: "lucas",
-          owner: "tiov1qcmdfwhs3j34e6usur3euf3y2z0het3u5p6a3z",
-          addresses: [
-            {
-              chainId:
-                "da3ed6a45429278bac2666961289ca17ad86595d33b31037615d4b8e8f158bba",
-              address: "4401556199488607253L"
-            },
-            {
-              chainId: "bns-hugnet",
-              address: "tiov1qcmdfwhs3j34e6usur3euf3y2z0het3u5p6a3z"
-            },
-            {
-              chainId: "bov-hugnet",
-              address: "tiov1e2e4zgysmuhf5pcnflu6smaeag0423rsrt5fy4"
-            }
-          ]
-        });
+    it("should return username data", async () => {
+      const profile = new UserProfile();
+      const signer = new MultiChainSigner(profile);
+      const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+      const chainId = connection.chainId();
+
+      const wallet = profile.addWallet(
+        Ed25519HdWallet.fromEntropy(await Random.getBytes(32))
+      );
+      const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
+      const identityAddress = signer.identityToAddress(identity);
+      const faucet = new IovFaucet(config.iovFaucet);
+      await faucet.credit(identityAddress, "CASH" as TokenTicker);
+
+      // Register username
+      const username = `bns-p_test-un_${Math.random().toString(36).substring(2)}`;
+      console.log("username created:", username);
+      const registration = await connection.withDefaultFee<RegisterUsernameTx>({
+        kind: "bns/register_username",
+        creator: identity,
+        addresses: [{ chainId: chainId, address: identityAddress }],
+        username: username,
+      });
+      const nonce = await connection.getNonce({ pubkey: identity.pubkey });
+      const signed = await profile.signTransaction(
+        registration,
+        bnsCodec,
+        nonce
+      );
+      {
+        const response = await connection.postTx(bnsCodec.bytesToPost(signed));
+        await response.blockInfo.waitFor(info => !isBlockInfoPending(info));
+      }
+      connection.disconnect();
+      return request.get(`/username/${username}`).expect(200).expect(res => {
+        expect(res.body.id).to.be.equal(username);
+        expect(res.body.owner).to.be.equal(identityAddress);
+      });
+    });
+  });
+  describe("POST /username", () => {
+    it("should create username", async () => {
+      const profile = new UserProfile();
+      const signer = new MultiChainSigner(profile);
+      const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+      const chainId = connection.chainId();
+
+      const wallet = profile.addWallet(
+        Ed25519HdWallet.fromEntropy(await Random.getBytes(32))
+      );
+      const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
+      const identityAddress = signer.identityToAddress(identity);
+      const faucet = new IovFaucet(config.iovFaucet);
+      await faucet.credit(identityAddress, "CASH" as TokenTicker);
+
+      // Register username
+      const username = `bns-p_test-un_${Math.random().toString(36).substring(2)}`;
+      console.log("username created:", username);
+      const registration = await connection.withDefaultFee<RegisterUsernameTx>({
+        kind: "bns/register_username",
+        creator: identity,
+        addresses: [{ chainId: chainId, address: identityAddress }],
+        username: username,
+      });
+      const nonce = await connection.getNonce({ pubkey: identity.pubkey });
+      connection.disconnect();
+      const signed = await profile.signTransaction(
+        registration,
+        bnsCodec,
+        nonce
+      );
+
+      const signedHex = JSON.parse(JSON.stringify(signed));
+      signedHex.transaction.creator.pubkey.data = Encoding.toHex(signed.transaction.creator.pubkey.data);
+      signedHex.primarySignature.pubkey.data = Encoding.toHex(signed.primarySignature.pubkey.data);
+      signedHex.primarySignature.signature = Encoding.toHex(signed.primarySignature.signature);
+
+      return request.post("/username").send(signedHex).expect(200).expect(res => {
+        expect(res.body.transactionId).to.be.an('string');
+        expect(res.body.block).to.be.an('object');
+      });
     });
   });
 });

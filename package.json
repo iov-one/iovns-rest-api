@@ -7,21 +7,26 @@
   "scripts": {
     "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
     "lint": "tslint -t verbose --project .",
-    "prebuild": "yarn format && yarn lint",
+    "prebuild": "yarn lint",
     "build": "rm -rf build && tsc",
-    "local-test": "yarn build && NODE_ENV=local mocha \"./build/**/*.spec.js\" --exit",
+    "local-test": "yarn build && NODE_ENV=local mocha --timeout 25000 \"./build/**/*.spec.js\" --exit",
     "local-start": "yarn build && NODE_ENV=local node build/server.js",
-    "testnet-test": "yarn build && NODE_ENV=testnet mocha \"./build/**/*.spec.js\" --exit",
+    "testnet-test": "yarn build && NODE_ENV=testnet mocha --timeout 25000 \"./build/**/*.spec.js\" --exit",
     "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js"
   },
   "dependencies": {
+    "@iov/bcp": "^0.14.5",
     "@iov/bns": "^0.14.5",
+    "@iov/encoding": "^0.15.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
+    "@iov/core": "^0.14.5",
+    "@iov/faucets": "^0.14.5",
+    "@iov/keycontrol": "^0.14.5",
     "@koa/cors": "^3.0.0",
     "@types/chai": "^4.1.7",
     "@types/koa": "^2.0.48",
