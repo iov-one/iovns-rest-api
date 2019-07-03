@@ -13,7 +13,7 @@
     "local-start": "yarn build && NODE_ENV=local node build/server.js",
     "testnet-test": "yarn build && NODE_ENV=testnet mocha --timeout 25000 \"./build/**/*.spec.js\" --exit",
     "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js",
-    "start": "yarn build && NODE_ENV=testnet node build/server.js"
+    "start": "rm -rf build && tsc && NODE_ENV=testnet node build/server.js"
   },
   "dependencies": {
     "@iov/bcp": "^0.14.5",
@@ -22,7 +22,8 @@
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^4.2.0",
-    "koa-router": "^7.4.0"
+    "koa-router": "^7.4.0",
+    "typescript": "^3.5.2"
   },
   "devDependencies": {
     "@iov/core": "^0.14.5",
@@ -43,7 +44,6 @@
     "supertest": "^4.0.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
-    "tslint-immutable": "^6.0.0",
-    "typescript": "^3.5.2"
+    "tslint-immutable": "^6.0.0"
   }
 }
