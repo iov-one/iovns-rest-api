@@ -12,7 +12,8 @@
     "local-test": "yarn build && NODE_ENV=local mocha --timeout 25000 \"./build/**/*.spec.js\" --exit",
     "local-start": "yarn build && NODE_ENV=local node build/server.js",
     "testnet-test": "yarn build && NODE_ENV=testnet mocha --timeout 25000 \"./build/**/*.spec.js\" --exit",
-    "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js"
+    "testnet-start": "yarn build && NODE_ENV=testnet node build/server.js",
+    "start": "yarn build && NODE_ENV=testnet node build/server.js"
   },
   "dependencies": {
     "@iov/bcp": "^0.14.5",
