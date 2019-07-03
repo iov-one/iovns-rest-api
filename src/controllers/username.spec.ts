@@ -98,7 +98,7 @@ describe("Username", () => {
       signedHex.transaction.creator.pubkey.data = Encoding.toHex(signed.transaction.creator.pubkey.data);
       signedHex.primarySignature.pubkey.data = Encoding.toHex(signed.primarySignature.pubkey.data);
       signedHex.primarySignature.signature = Encoding.toHex(signed.primarySignature.signature);
-
+      console.log('signedHex', signedHex);
       return request.post("/username").send(signedHex).expect(200).expect(res => {
         expect(res.body.transactionId).to.be.an('string');
         expect(res.body.block).to.be.an('object');

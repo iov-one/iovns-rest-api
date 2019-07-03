@@ -5,6 +5,7 @@ import * as helmet from "koa-helmet";
 import { config } from "./config";
 import generalController from "./controllers/general";
 import usernameController from "./controllers/username";
+import accountController from "./controllers/account";
 
 export const app = new Koa();
 
@@ -21,6 +22,10 @@ app.use(generalController.allowedMethods());
 // Username
 app.use(usernameController.routes());
 app.use(usernameController.allowedMethods());
+
+// Account
+app.use(accountController.routes());
+app.use(accountController.allowedMethods());
 
 app.listen(config.port);
 
