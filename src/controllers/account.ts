@@ -12,7 +12,8 @@ const routerOpts: Router.IRouterOptions = {
 
 const router: Router = new Router(routerOpts);
 
-router.get("/:owner", async (ctx: Koa.Context) => {
+// Address
+router.get("/address/:owner", async (ctx: Koa.Context) => {
   try {
     const identityAddress = ctx.params.owner;
     const connection = await BnsConnection.establish(config.bnsdTendermintUrl);
@@ -22,12 +23,38 @@ router.get("/:owner", async (ctx: Koa.Context) => {
       // return a BAD REQUEST status code and error message
       ctx.status = 400;
       ctx.body = {
-        message: `The address you are trying to retrieve (${identityAddress}) doesn't exist in BNS`
+        message: `The address you are trying to retrieve information (${identityAddress}) doesn't exist in BNS`
       };
     } else {
       // return OK status code and loaded username object
       ctx.status = 200;
       ctx.body = results[0];
+    }
+    connection.disconnect();
+  } catch (e) {
+    ctx.status = 400;
+    ctx.body = {
+      message: `${e}`
+    };
+  }
+});
+
+router.get("/address/balance/:owner", async (ctx: Koa.Context) => {
+  try {
+    const identityAddress = ctx.params.owner;
+    const connection = await BnsConnection.establish(config.bnsdTendermintUrl);
+    const results = await connection.getAccount({ address: identityAddress });
+    ctx.body = results;
+    if (results === null) {
+      // return a BAD REQUEST status code and error message
+      ctx.status = 400;
+      ctx.body = {
+        message: `The address you are trying to retrieve balance (${identityAddress}) doesn't exist in BNS`
+      };
+    } else {
+      // return OK status code and loaded username object
+      ctx.status = 200;
+      ctx.body = results;
     }
     connection.disconnect();
   } catch (e) {
@@ -53,6 +80,7 @@ router.get("/address/nonce/:owner", async (ctx: Koa.Context) => {
   }
 });
 
+// Pubkey
 router.get("/pubkey/nonce/:owner", async (ctx: Koa.Context) => {
   try {
     const pubkeyBytes = Encoding.fromHex(ctx.params.owner) as PublicKeyBytes;

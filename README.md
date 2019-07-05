@@ -23,9 +23,13 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 - `POST /username`: creates a username
 
 ### Account
-- `GET /account/:owner`: returns account information based on address
-- `GET /address/nonce/:owner` returns nonce based on address
-- `GET /pubkey/nonce/:owner` returns nonce based on public key
+- `GET /account/address/:owner`: returns account information (addresses) based on iov address
+- `GET /account/address/balance/:address`: returns account information (balances) based on iov address
+- `GET /account/address/nonce/:owner` returns nonce based on iov address
+- `GET /account/pubkey/nonce/:owner` returns nonce based on iov public key
+
+### Transaction
+- `POST /transaction`: creates a transaction
 
 ## Api Examples
 ### New username example
