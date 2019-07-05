@@ -77,3 +77,49 @@ The following json object should be generated and send it to post username to cr
   "otherSignatures": []
 }
 ```
+
+### Send transaction example
+Based on:
+- 12 words secret account: `devote figure chef merge throw swear muscle another midnight shock raven duck prefer wolf chase flight notice scout wrap hair pencil desk senior until`
+- recipient address: `tiov16mmje4vu9e580krwghg9rcpcqnek3f5fp93ffp`
+- chain id: `local-bns-devnet`
+- nonce: 0
+
+The following json object should be generated and post to transaction to transfer tokens:
+```json
+{
+  "transaction": {
+    "kind": "bcp/send",
+    "creator": {
+      "chainId": "local-bns-devnet",
+      "pubkey": {
+        "algo": "ed25519",
+        "data": "a16779974533eec816585e9479f0f8e29adeca3b7edd4d1fbf5e750c079ca844"
+      }
+    },
+    "recipient": "tiov16mmje4vu9e580krwghg9rcpcqnek3f5fp93ffp",
+    "memo": "My first payment from IOV BNS-Proxy",
+    "amount": {
+      "quantity": "1000053000",
+      "fractionalDigits": 9,
+      "tokenTicker": "CASH"
+    },
+    "fee": {
+      "tokens": {
+        "quantity": "10000000",
+        "fractionalDigits": 9,
+        "tokenTicker": "CASH"
+      }
+    }
+  },
+  "primarySignature": {
+    "pubkey": {
+      "algo": "ed25519",
+      "data": "a16779974533eec816585e9479f0f8e29adeca3b7edd4d1fbf5e750c079ca844"
+    },
+    "nonce": 0,
+    "signature": "3e8bb061f46e02e82c5a3aa736b4f1f4b6303f24db07c8d79ebd7c2fcc78818db11254e7eb0a7476cc008a1ca05e648c23712c3d9bc5e49aa51572d1ee419204"
+  },
+  "otherSignatures": []
+}
+```

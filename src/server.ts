@@ -6,6 +6,7 @@ import { config } from "./config";
 import generalController from "./controllers/general";
 import usernameController from "./controllers/username";
 import accountController from "./controllers/account";
+import transactionController from "./controllers/transaction";
 
 export const app = new Koa();
 
@@ -26,6 +27,10 @@ app.use(usernameController.allowedMethods());
 // Account
 app.use(accountController.routes());
 app.use(accountController.allowedMethods());
+
+// Transaction
+app.use(transactionController.routes());
+app.use(transactionController.allowedMethods());
 
 app.listen(config.port);
 
