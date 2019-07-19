@@ -35,7 +35,7 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 ### New username example
 Based on:
 - 12 words secret account: `dinosaur punch surface title crack sudden motion sight airport purse shoot napkin produce design wire mouse cake color tourist cricket purity brass speak once`
-- username to create: `bns-p_test-un_x5r0dm4838`
+- username to create: `bns-p_test-un_x5r0dm4838*iov`
 - chaain id: `local-bns-devnet`
 - nonce: 0
 
@@ -51,16 +51,16 @@ The following json object should be generated and send it to post username to cr
         "data": "8c798d3b64dfb99aef02abecf278f3d45d6cf8ca4b235326724f22da711a22a4"
       }
     },
-    "addresses": [
+    "targets": [
       {
         "chainId": "local-bns-devnet",
         "address": "tiov1te5s9q7up7kna962xznn7sgsnp5lhhstd3mgq7"
       }
     ],
-    "username": "bns-p_test-un_x5r0dm4838",
+    "username": "bns-p_test-un_x5r0dm4838*iov",
     "fee": {
       "tokens": {
-        "quantity": "5000000000",
+        "quantity": "1000053000",
         "fractionalDigits": 9,
         "tokenTicker": "CASH"
       }
@@ -97,6 +97,7 @@ The following json object should be generated and post to transaction to transfe
         "data": "a16779974533eec816585e9479f0f8e29adeca3b7edd4d1fbf5e750c079ca844"
       }
     },
+    "sender": "tiov1q3w5edgppc2tcd60gqkxh6gsupszgez46duwd7",
     "recipient": "tiov16mmje4vu9e580krwghg9rcpcqnek3f5fp93ffp",
     "memo": "My first payment from IOV BNS-Proxy",
     "amount": {

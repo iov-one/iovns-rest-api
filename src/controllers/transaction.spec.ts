@@ -1,8 +1,8 @@
 import * as supertest from "supertest";
-import { Address, ChainId, TokenTicker, SendTransaction } from "@iov/bcp";
+import { Address, ChainId, TokenTicker, SendTransaction, WithCreator } from "@iov/bcp";
 import { bnsConnector, bnsCodec } from "@iov/bns";
 import { Random } from "@iov/crypto";
-import { MultiChainSigner } from "@iov/core";
+import { MultiChainSigner } from "@iov/multichain";
 import { Ed25519HdWallet, HdPaths, UserProfile } from "@iov/keycontrol";
 import { IovFaucet } from "@iov/faucets";
 import { Bech32, Encoding } from "@iov/encoding";
@@ -37,9 +37,10 @@ describe("Transaction", () => {
       console.log("sender identityAddress", identityAddress);
       const rcptAddress = await randomBnsAddress();
 
-      const sendTx = await connection.withDefaultFee<SendTransaction>({
+      const sendTx = await connection.withDefaultFee<SendTransaction & WithCreator>({
         kind: "bcp/send",
         creator: identity,
+        sender: identityAddress,
         recipient: rcptAddress,
         memo: "My first payment from IOV BNS-Proxy",
         amount: {
@@ -60,7 +61,7 @@ describe("Transaction", () => {
       signedHex.transaction.creator.pubkey.data = Encoding.toHex(signed.transaction.creator.pubkey.data);
       signedHex.primarySignature.pubkey.data = Encoding.toHex(signed.primarySignature.pubkey.data);
       signedHex.primarySignature.signature = Encoding.toHex(signed.primarySignature.signature);
-
+      console.log("signedHex send transaction", signedHex);
       return request.post("/transaction").send(signedHex).expect(200).expect(res => {
         expect(res.body.transactionId).to.be.an('string');
         expect(res.body.block).to.be.an('object');

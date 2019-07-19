@@ -1,7 +1,7 @@
 import * as Koa from "koa";
 import * as Router from "koa-router";
 import { BnsConnection } from "@iov/bns";
-import { Algorithm, PublicKeyBytes, PublicKeyBundle } from "@iov/bcp";
+import { Algorithm, PubkeyBytes, PubkeyBundle } from "@iov/bcp";
 import { Encoding } from "@iov/encoding";
 
 import { config } from "../config";
@@ -83,8 +83,8 @@ router.get("/address/nonce/:owner", async (ctx: Koa.Context) => {
 // Pubkey
 router.get("/pubkey/nonce/:owner", async (ctx: Koa.Context) => {
   try {
-    const pubkeyBytes = Encoding.fromHex(ctx.params.owner) as PublicKeyBytes;
-    const identityPubkeyBundle: PublicKeyBundle = { 
+    const pubkeyBytes = Encoding.fromHex(ctx.params.owner) as PubkeyBytes;
+    const identityPubkeyBundle: PubkeyBundle = { 
       algo: Algorithm.Ed25519,
       data: pubkeyBytes 
     };
