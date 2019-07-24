@@ -13,7 +13,7 @@ import { app } from "../server";
 import { expect } from 'chai';
 
 const request = supertest.agent(app.listen());
-const cash = "CASH" as TokenTicker;
+const token = process.env.TOKEN as TokenTicker;
 
 async function randomBnsAddress(): Promise<Address> {
   return Bech32.encode("tiov", await Random.getBytes(20)) as Address;
@@ -33,8 +33,8 @@ describe("Transaction", () => {
       const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
       const identityAddress = signer.identityToAddress(identity);
       const faucet = new IovFaucet(config.iovFaucet);
-      await faucet.credit(identityAddress, "CASH" as TokenTicker);
-      console.log("sender identityAddress", identityAddress);
+      await faucet.credit(identityAddress, token);
+      // console.log("sender identityAddress", identityAddress);
       const rcptAddress = await randomBnsAddress();
 
       const sendTx = await connection.withDefaultFee<SendTransaction & WithCreator>({
@@ -46,7 +46,7 @@ describe("Transaction", () => {
         amount: {
           quantity: "1000053000",
           fractionalDigits: 9,
-          tokenTicker: cash,
+          tokenTicker: token,
         }
       });
       const nonce = await connection.getNonce({ pubkey: identity.pubkey });
@@ -61,7 +61,7 @@ describe("Transaction", () => {
       signedHex.transaction.creator.pubkey.data = Encoding.toHex(signed.transaction.creator.pubkey.data);
       signedHex.primarySignature.pubkey.data = Encoding.toHex(signed.primarySignature.pubkey.data);
       signedHex.primarySignature.signature = Encoding.toHex(signed.primarySignature.signature);
-      console.log("signedHex send transaction", signedHex);
+      // console.log("signedHex send transaction", signedHex);
       return request.post("/transaction").send(signedHex).expect(200).expect(res => {
         expect(res.body.transactionId).to.be.an('string');
         expect(res.body.block).to.be.an('object');

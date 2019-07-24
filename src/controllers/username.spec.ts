@@ -13,6 +13,7 @@ import { app } from "../server";
 import { expect } from 'chai';
 
 const request = supertest.agent(app.listen());
+const token = process.env.TOKEN as TokenTicker;
 
 describe("Username", () => {
   describe("GET /username", () => {
@@ -34,16 +35,17 @@ describe("Username", () => {
       const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
       const identityAddress = signer.identityToAddress(identity);
       const faucet = new IovFaucet(config.iovFaucet);
-      await faucet.credit(identityAddress, "CASH" as TokenTicker);
+      await faucet.credit(identityAddress, token);
 
+      // console.log("identityAddress", identityAddress);
       // Register username
       const username = `bns-p_test-un_${Math.random().toString(36).substring(2)}*iov`;
-      console.log("username created:", username);
+      // console.log("username created:", username);
       const registration = await connection.withDefaultFee<RegisterUsernameTx & WithCreator>({
         kind: "bns/register_username",
         creator: identity,
         username: username,
-        targets: [{ chainId: chainId, address: identityAddress }],
+        targets: [{ chainId: chainId as ChainId, address: identityAddress }],
       });
       const nonce = await connection.getNonce({ pubkey: identity.pubkey });
       const signed = await profile.signTransaction(
@@ -75,16 +77,17 @@ describe("Username", () => {
       const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
       const identityAddress = signer.identityToAddress(identity);
       const faucet = new IovFaucet(config.iovFaucet);
-      await faucet.credit(identityAddress, "CASH" as TokenTicker);
+      await faucet.credit(identityAddress, token);
 
+      // console.log("identityAddress", identityAddress);
       // Register username
       const username = `bns-p_test-un_${Math.random().toString(36).substring(2)}*iov`;
-      console.log("username created:", username);
+      // console.log("username created:", username);
       const registration = await connection.withDefaultFee<RegisterUsernameTx & WithCreator>({
         kind: "bns/register_username",
         creator: identity,
         username: username,
-        targets: [{ chainId: chainId, address: identityAddress }],
+        targets: [{ chainId: chainId as ChainId, address: identityAddress }],
       });
       const nonce = await connection.getNonce({ pubkey: identity.pubkey });
       connection.disconnect();
@@ -98,7 +101,7 @@ describe("Username", () => {
       signedHex.transaction.creator.pubkey.data = Encoding.toHex(signed.transaction.creator.pubkey.data);
       signedHex.primarySignature.pubkey.data = Encoding.toHex(signed.primarySignature.pubkey.data);
       signedHex.primarySignature.signature = Encoding.toHex(signed.primarySignature.signature);
-      console.log("signedHex create username", signedHex);
+      // console.log("signedHex create username", signedHex);
       return request.post("/username").send(signedHex).expect(200).expect(res => {
         expect(res.body.transactionId).to.be.an('string');
         expect(res.body.block).to.be.an('object');
