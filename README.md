@@ -21,6 +21,7 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 ### Username
 - `GET /username/:id`: returns user data based on username
 - `POST /username`: creates a username
+- `PATCH /username`: updates targets from specific username
 
 ### Account
 - `GET /account/address/:owner`: returns account information (addresses) based on iov address
