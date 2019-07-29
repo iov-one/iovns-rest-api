@@ -33,4 +33,20 @@ router.post("/", async (ctx: Koa.Context) => {
     };
   }
 });
+
+router.get("/", async (ctx: Koa.Context) => {
+  try {
+    const query = {...ctx.query};
+    const connection = await BnsConnection.establish(config.bnsdTendermintUrl);
+    const txData = await connection.searchTx(query);
+    ctx.body = txData;
+    connection.disconnect();
+  } catch (e) {
+    ctx.status = 400;
+    ctx.body = {
+      message: `${e}`
+    };
+  }
+});
+
 export default router;

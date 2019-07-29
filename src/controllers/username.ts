@@ -66,7 +66,6 @@ router.patch("/", async (ctx: Koa.Context) => {
     connection.disconnect();
     ctx.body = {transactionId: response.transactionId, block: blockResponse};
   } catch (e) {
-    console.log("error", e);
     ctx.status = 400;
     ctx.body = {
       message: `${e}`

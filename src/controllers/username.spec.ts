@@ -125,9 +125,9 @@ describe("Username", () => {
 
       // Register username
       const username = `bns-p_test-un_${Math.random().toString(36).substring(2)}*iov`;
-      console.log("username created:", username);
+      // console.log("username created:", username);
       const targets = [{ chainId: chainId as ChainId, address: identityAddress }];
-      console.log("targets", targets);
+      // console.log("targets", targets);
       const registration = await connection.withDefaultFee<RegisterUsernameTx & WithCreator>({
         kind: "bns/register_username",
         creator: identity,
@@ -148,7 +148,7 @@ describe("Username", () => {
       const identity2 = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(1));
       const identityAddress2 = signer.identityToAddress(identity2);
       const targets2 = [{ chainId: chainId as ChainId, address: identityAddress2 }];
-      console.log("targets2", targets2);
+      // console.log("targets2", targets2);
       // Update targets
       const updateTargets = await connection.withDefaultFee<UpdateTargetsOfUsernameTx & WithCreator>({
         kind: "bns/update_targets_of_username",
@@ -168,7 +168,7 @@ describe("Username", () => {
       signedHex.transaction.creator.pubkey.data = Encoding.toHex(signedUpdateTargets.transaction.creator.pubkey.data);
       signedHex.primarySignature.pubkey.data = Encoding.toHex(signedUpdateTargets.primarySignature.pubkey.data);
       signedHex.primarySignature.signature = Encoding.toHex(signedUpdateTargets.primarySignature.signature);
-      console.log("signedHex update username transactions", signedHex);
+      // console.log("signedHex update username transactions", signedHex);
       return request.patch("/username").send(signedHex).expect(200).expect(res => {
         expect(res.body.transactionId).to.be.an('string');
         expect(res.body.block).to.be.an('object');
