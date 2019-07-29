@@ -22,4 +22,16 @@ router.get("chain", async (ctx: Koa.Context, next: Function) => {
   connection.disconnect();
 });
 
+router.get("status", async (ctx: Koa.Context) => {
+  ctx.body = `BNSD Tendermint Node: ${config.bnsdTendermintHttpUrl} - IOV Faucet Node: ${config.iovFaucet}`;
+});
+
+router.get("tokens", async (ctx: Koa.Context, next: Function) => {
+  await next();
+  const connection = await bnsConnector(config.bnsdTendermintUrl).client();
+  const allTokens = await connection.getAllTokens();
+  ctx.body = { allTokens };
+  connection.disconnect();
+});
+
 export default router;
