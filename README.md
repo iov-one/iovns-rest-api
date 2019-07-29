@@ -20,6 +20,11 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 - `GET /status`: returns tendermint and faucet urls
 - `GET /tokens`: returns list of tokens
 
+### Block
+- `GET /block/latest`: returns latest block height
+- `GET /block/:height`: returns block header based on block height
+
+
 ### Username
 - `GET /username/:id`: returns user data based on username
 - `POST /username`: creates a username

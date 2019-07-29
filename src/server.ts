@@ -4,6 +4,7 @@ import * as helmet from "koa-helmet";
 
 import { config } from "./config";
 import generalController from "./controllers/general";
+import blockController from "./controllers/block";
 import usernameController from "./controllers/username";
 import accountController from "./controllers/account";
 import transactionController from "./controllers/transaction";
@@ -20,6 +21,11 @@ app.use(bodyParser());
 // General
 app.use(generalController.routes());
 app.use(generalController.allowedMethods());
+
+// Block
+app.use(blockController.routes());
+app.use(blockController.allowedMethods());
+
 // Username
 app.use(usernameController.routes());
 app.use(usernameController.allowedMethods());
