@@ -17,7 +17,7 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 ### General
 - `GET /`: returns welcome message
 - `GET /chain`: returns chain id
-- `GET /status`: returns tendermint and faucet urls
+- `GET /nodes`: returns tendermint and faucet urls
 - `GET /tokens`: returns list of tokens
 
 ### Block

@@ -18,9 +18,9 @@ describe("General", () => {
       });
     });
   });
-  describe("GET /status", () => {
+  describe("GET /nodes", () => {
     it("should return tendermint and faucet urls", () => {
-      return request.get("/status").expect(200, `BNSD Tendermint Node: ${config.bnsdTendermintHttpUrl} - IOV Faucet Node: ${config.iovFaucet}`);
+      return request.get("/nodes").expect(200, `BNSD Tendermint Node: ${config.bnsdTendermintHttpUrl} - IOV Faucet Node: ${config.iovFaucet}`);
     });
   });
   describe("GET /tokens", () => {
