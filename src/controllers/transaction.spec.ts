@@ -29,17 +29,17 @@ async function createAndSignTx() {
     Ed25519HdWallet.fromEntropy(await Random.getBytes(32))
   );
   const identity = await profile.createIdentity(wallet.id, chainId as ChainId, HdPaths.iov(0));
-  const identityAddress = signer.identityToAddress(identity);
+  const senderAddress = signer.identityToAddress(identity);
   const faucet = new IovFaucet(config.iovFaucet);
-  await faucet.credit(identityAddress, token);
-  // console.log("sender identityAddress", identityAddress);
+  await faucet.credit(senderAddress, token);
+  // console.log("sender senderAddress", senderAddress);
   const rcptAddress = await randomBnsAddress();
   const txTimeStamp = Date.now();
 
   const sendTx = await connection.withDefaultFee<SendTransaction & WithCreator>({
     kind: "bcp/send",
     creator: identity,
-    sender: identityAddress,
+    sender: senderAddress,
     recipient: rcptAddress,
     memo: `BNS-Proxy tx ${txTimeStamp}`,
     amount: {
@@ -54,7 +54,7 @@ async function createAndSignTx() {
     bnsCodec,
     nonce
   );
-  return {signed, connection};
+  return {signed, connection, senderAddress, rcptAddress};
 }
 
 describe("Transaction", () => {
@@ -74,20 +74,41 @@ describe("Transaction", () => {
     });
   });
   describe("GET /", () => {
-    it("should return error when tx id does not exists", () => {
-      const txIdInvalid = 'abcd';
-      return request.get(`/transaction?id=${txIdInvalid}`).expect(200).expect(res => {
-        expect(res.body.length).to.be.equal(0);
+    describe("by transaction id", () => {
+      it("should return error when tx id does not exists", () => {
+        const txIdInvalid = 'abcd';
+        return request.get(`/transaction?id=${txIdInvalid}`).expect(200).expect(res => {
+          expect(res.body.length).to.be.equal(0);
+        });
+      });
+      it("should return transaction information based on transaction id", async () => {
+        const {connection, signed} = await createAndSignTx();
+        const response = await connection.postTx(bnsCodec.bytesToPost(signed));
+        await response.blockInfo.waitFor(info => !isBlockInfoPending(info));
+        const transactionId = response.transactionId;
+        connection.disconnect();
+        return request.get(`/transaction?id=${transactionId}`).expect(200).expect(res => {
+          expect(res.body[0].transactionId).to.be.equal(transactionId);
+        });
       });
     });
-    it("should return transaction information based on transaction id", async () => {
-      const {connection, signed} = await createAndSignTx();
-      const response = await connection.postTx(bnsCodec.bytesToPost(signed));
-      await response.blockInfo.waitFor(info => !isBlockInfoPending(info));
-      const transactionId = response.transactionId;
-      connection.disconnect();
-      return request.get(`/transaction?id=${transactionId}`).expect(200).expect(res => {
-        expect(res.body[0].transactionId).to.be.equal(transactionId);
+    describe("by user address", () => {
+      it("should return error when user address does not exists", async () => {
+        const randomUserAddress = await randomBnsAddress();
+        return request.get(`/transaction?sentFromOrTo=${randomUserAddress}`).expect(200).expect(res => {
+          expect(res.body.length).to.be.equal(0);
+        });
+      });
+      it("should return transactions list based on user address", async () => {
+        const {connection, signed, senderAddress} = await createAndSignTx();
+        const response = await connection.postTx(bnsCodec.bytesToPost(signed));
+        await response.blockInfo.waitFor(info => !isBlockInfoPending(info));
+        const transactionId = response.transactionId;
+        connection.disconnect();
+        return request.get(`/transaction?sentFromOrTo=${senderAddress}`).expect(200).expect(res => {
+          expect(res.body.length).to.be.greaterThan(1);
+          expect(res.body[res.body.length - 1].transactionId).to.be.equal(transactionId);
+        });
       });
     });
   });

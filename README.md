@@ -40,6 +40,7 @@ yarn testnet-test (or local-start if bnsd and faucet available locally)
 - `POST /transaction`: creates a transaction
 - `GET /transaction/`: returns transaction information based on query parameters:
   - id=transactionId
+  - sentFromOrTo=userAddress
 
 ## Api Examples
 ### New username example
