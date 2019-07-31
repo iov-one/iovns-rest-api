@@ -11,7 +11,7 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.get("/", async (ctx: Koa.Context) => {
-  ctx.body = "Welcome to IOV BNS Server!";
+  ctx.body = "Welcome to IOV Name Service Rest API!";
 });
 
 router.get("chain", async (ctx: Koa.Context, next: Function) => {

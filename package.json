@@ -1,7 +1,7 @@
 {
-  "name": "bns-proxy",
+  "name": "ins-rest-api",
   "version": "0.0.1",
-  "description": "BNS Proxy Server",
+  "description": "IOV Name Service Rest API",
   "author": "IOV SAS <admin@iov.one>",
   "license": "Apache-2.0",
   "scripts": {

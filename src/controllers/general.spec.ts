@@ -8,7 +8,7 @@ const request = supertest.agent(app.listen());
 describe("General", () => {
   describe("GET /", () => {
     it("should return welcome message", () => {
-      return request.get("/").expect(200, "Welcome to IOV BNS Server!");
+      return request.get("/").expect(200, "Welcome to IOV Name Service Rest API!");
     });
   });
   describe("GET /chain", () => {
