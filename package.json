@@ -32,9 +32,9 @@
     "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "@iov/multichain": "0.16.0-alpha.3",
     "@iov/faucets": "0.16.0-alpha.3",
     "@iov/keycontrol": "0.16.0-alpha.3",
+    "@iov/multichain": "0.16.0-alpha.3",
     "@koa/cors": "^3.0.0",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
