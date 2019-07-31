@@ -1,6 +1,6 @@
-# BNS-Proxy
+# IOV Name Service REST API
 
-The usage of this BNS-proxy is very simple, to install it, run:
+The usage of this iovns-rest-api is very simple, to install it, run:
 
 ```
 yarn install
