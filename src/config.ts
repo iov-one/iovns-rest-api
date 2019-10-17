@@ -7,7 +7,6 @@ if (!ENVIRONMENT || ENV_WHITELIST.indexOf(ENVIRONMENT) === -1) {
 
 interface IConfig {
   port: number;
-  jwtSecret: string;
   bnsdTendermintHttpUrl: string;
   bnsdTendermintUrl: string;
   iovFaucet: string;
