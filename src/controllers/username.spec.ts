@@ -1,6 +1,6 @@
 import * as supertest from "supertest";
 import { ChainId, isBlockInfoPending, TokenTicker, WithCreator } from "@iov/bcp";
-import { bnsConnector, bnsCodec, RegisterUsernameTx, UpdateTargetsOfUsernameTx } from "@iov/bns";
+import { createBnsConnector, bnsCodec, RegisterUsernameTx, UpdateTargetsOfUsernameTx } from "@iov/bns";
 import { Random } from "@iov/crypto";
 import { MultiChainSigner } from "@iov/multichain";
 import { Ed25519HdWallet, HdPaths, UserProfile } from "@iov/keycontrol";
@@ -26,7 +26,7 @@ describe("Username", () => {
     it("should return username data", async () => {
       const profile = new UserProfile();
       const signer = new MultiChainSigner(profile);
-      const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+      const { connection } = await signer.addChain(createBnsConnector(config.bnsdTendermintUrl));
       const chainId = connection.chainId();
 
       const wallet = profile.addWallet(
@@ -68,7 +68,7 @@ describe("Username", () => {
     it("should create username", async () => {
       const profile = new UserProfile();
       const signer = new MultiChainSigner(profile);
-      const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+      const { connection } = await signer.addChain(createBnsConnector(config.bnsdTendermintUrl));
       const chainId = connection.chainId();
 
       const wallet = profile.addWallet(
@@ -112,7 +112,7 @@ describe("Username", () => {
     it("should update username addresses (targets)", async () => {
       const profile = new UserProfile();
       const signer = new MultiChainSigner(profile);
-      const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+      const { connection } = await signer.addChain(createBnsConnector(config.bnsdTendermintUrl));
       const chainId = connection.chainId();
 
       const wallet = profile.addWallet(

@@ -1,6 +1,6 @@
 import * as supertest from "supertest";
 import { Address, ChainId, isBlockInfoPending, TokenTicker, SendTransaction, WithCreator } from "@iov/bcp";
-import { bnsConnector, bnsCodec } from "@iov/bns";
+import { createBnsConnector, bnsCodec } from "@iov/bns";
 import { Random } from "@iov/crypto";
 import { MultiChainSigner } from "@iov/multichain";
 import { Ed25519HdWallet, HdPaths, UserProfile } from "@iov/keycontrol";
@@ -22,7 +22,7 @@ async function randomBnsAddress(): Promise<Address> {
 async function createAndSignTx() {
   const profile = new UserProfile();
   const signer = new MultiChainSigner(profile);
-  const { connection } = await signer.addChain(bnsConnector(config.bnsdTendermintUrl));
+  const { connection } = await signer.addChain(createBnsConnector(config.bnsdTendermintUrl));
   const chainId = connection.chainId();
 
   const wallet = profile.addWallet(
